@@ -5,9 +5,9 @@ import Image from 'next/image'
 const HeroSection = () => {
     return (
         <section className="pt-44 pb-12 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-50/60 via-white to-white overflow-hidden relative flex items-center">
-            {/* Decorative background shapes */}
-            <div className="absolute top-32 left-[-100px] w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob transform-gpu will-change-[transform,filter]"></div>
-            <div className="absolute top-10 right-[-50px] w-72 h-72 bg-cyan-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 transform-gpu will-change-[transform,filter]"></div>
+            {/* Decorative background shapes (Hardware Accelerated) */}
+            <div className="absolute top-32 left-[-100px] w-96 h-96 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-100/60 to-transparent rounded-full opacity-60 pointer-events-none transform-gpu will-change-transform"></div>
+            <div className="absolute top-10 right-[-50px] w-96 h-96 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-100/60 to-transparent rounded-full opacity-60 pointer-events-none transform-gpu will-change-transform"></div>
 
             <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full relative z-10">
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8">
@@ -15,7 +15,7 @@ const HeroSection = () => {
                     {/* Left Content Column */}
                     <div className="lg:flex-[0.9] flex flex-col items-start space-y-6 z-10 w-full">
                         {/* Badge */}
-                        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-800 font-semibold text-[13px] transform transition hover:scale-105 cursor-pointer shadow-sm">
+                        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-800 font-semibold text-[13px] shadow-sm transform-gpu transition hover:scale-105 cursor-pointer">
                             <span className="flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse"></span>
                             <span>#1 Trusted Student Housing Platform</span>
                         </div>
@@ -87,14 +87,15 @@ const HeroSection = () => {
                     {/* Right Image Column */}
                     <div className="lg:flex-[1.1] w-full relative group mt-8 lg:mt-0">
                         {/* Glow backdrop behind image */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 to-blue-500 rounded-[2rem] blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-700 transform-gpu will-change-[opacity]"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-blue-500/20 rounded-[2rem] group-hover:opacity-100 transition-opacity duration-700 -z-10 transform-gpu will-change-transform scale-105"></div>
 
                         {/* Main Image Container */}
-                        <div className="relative h-[300px] lg:h-[460px] w-full rounded-[2rem] overflow-hidden shadow-xl ring-1 ring-gray-900/5 transition-transform duration-700 group-hover:-translate-y-2">
+                        <div className="relative h-[300px] lg:h-[460px] w-full rounded-[2rem] overflow-hidden shadow-xl ring-1 ring-gray-900/5 transition-transform duration-700 group-hover:-translate-y-2 transform-gpu will-change-transform">
                             <Image
                                 src="/hero-image.png"
                                 alt="Students enjoying their premium Uniroost accommodation"
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                                 className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
                                 priority
                             />
@@ -123,7 +124,7 @@ const HeroSection = () => {
                         </div>
 
                         {/* Subtle bottom shadow anchor */}
-                        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-4/5 h-8 bg-black/10 blur-xl rounded-full"></div>
+                        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-4/5 h-8 bg-black/10 blur-xl rounded-full transform-gpu pointer-events-none"></div>
                     </div>
 
                 </div>

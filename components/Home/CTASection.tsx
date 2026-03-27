@@ -15,7 +15,7 @@ const CTASection = () => {
                     <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none mix-blend-overlay"></div>
 
                     <div className="relative z-10 max-w-4xl mx-auto">
-                        <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-sm mb-8 backdrop-blur-sm shadow-sm cursor-pointer hover:bg-white/20 transition-colors">
+                        <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-sm mb-8 backdrop-blur-[4px] shadow-sm cursor-pointer hover:bg-white/20 transition-colors">
                             <ShieldCheck size={16} className="text-cyan-400" />
                             <span>100% Secure & Verified</span>
                         </div>
@@ -35,7 +35,7 @@ const CTASection = () => {
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
                             
-                            <Link href="/contact-us" className="group w-full sm:w-auto px-8 py-4 rounded-full bg-white/5 text-white font-bold text-lg border border-white/10 hover:bg-white/15 hover:border-white/20 transition-all backdrop-blur-md flex items-center justify-center space-x-2">
+                            <Link href="/contact-us" className="group w-full sm:w-auto px-8 py-4 rounded-full bg-white/5 text-white font-bold text-lg border border-white/10 hover:bg-white/15 hover:border-white/20 transition-all backdrop-blur-[6px] flex items-center justify-center space-x-2">
                                 <Phone size={20} className="text-gray-400 group-hover:text-white transition-colors" />
                                 <span>Talk to Our Team</span>
                             </Link>

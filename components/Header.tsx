@@ -1,20 +1,26 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Menu, UserCircle, MessageSquare, Users, Home } from 'lucide-react';
+import { Search, MessageSquare, Users, Home } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -55,71 +61,22 @@ const Header = () => {
         </nav>
 
         {/* Right Side Actions */}
-        <div className="flex-1 flex items-center justify-end space-x-4">
-          <button className="hidden lg:block text-md font-semibold py-3 px-4 rounded-full hover:bg-gray-100 transition-colors">
-            Become a host
-          </button>
-          <div
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center p-2 rounded-full transition-all cursor-pointer hover:bg-gray-100 bg-gray-50"
+        <div className="flex-1 flex items-center justify-end space-x-3">
+          <Link 
+            href="/login" 
+            className="hidden sm:block text-sm font-bold text-gray-700 hover:text-cyan-600 px-4 py-2 rounded-full hover:bg-gray-50 transition-all"
           >
-            <Menu size={22} />
-
-            {isMenuOpen && (
-              <div className="absolute top-[74px] right-4 md:right-10 lg:right-20 w-60 bg-white border border-gray-100 rounded-xl shadow-[0_2px_16px_rgba(0,0,0,0.12)] py-2 z-50 overflow-hidden">
-                <button className="w-full text-left px-4 py-3 text-sm font-semibold hover:bg-gray-100 transition">Log in or sign up</button>
-                <div className="h-[1px] bg-gray-100 my-1"></div>
-                <button className="w-full text-left px-4 py-3 text-sm hover:bg-gray-100 transition">Become a host</button>
-                <button className="w-full text-left px-4 py-3 text-sm hover:bg-gray-100 transition">Help Centre</button>
-              </div>
-            )}
-          </div>
+            Log in
+          </Link>
+          <Link 
+            href="/signup" 
+            className="text-sm font-black text-white bg-gray-900 px-6 py-2.5 rounded-full hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-900/10 transition-all active:scale-95"
+          >
+            Sign up
+          </Link>
         </div>
       </div>
 
-      {/* Floating Search Bar */}
-      <div 
-        className={`flex justify-center overflow-hidden transition-all duration-300 ease-in-out transform origin-top ${
-          isScrolled ? 'max-h-0 opacity-0 scale-y-95' : 'max-h-[100px] opacity-100 scale-y-100 pb-4'
-        }`}
-      >
-        <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow cursor-pointer w-full max-w-[800px] h-[66px]">
-
-          {/* City */}
-          <div className="flex flex-col flex-1 pl-8 pr-4 py-2 hover:bg-gray-100 rounded-full group h-full justify-center min-w-0">
-            <span className="text-xs font-bold uppercase tracking-wide">City</span>
-            <input
-              type="text"
-              placeholder="Search destinations"
-              className="bg-transparent text-sm outline-none placeholder-gray-500 w-full truncate"
-            />
-          </div>
-
-          <div className="h-8 w-[1px] bg-gray-200 shrink-0"></div>
-
-          {/* College */}
-          <div className="flex flex-col flex-1 px-6 py-2 hover:bg-gray-100 rounded-full group h-full justify-center min-w-0">
-            <span className="text-xs font-bold uppercase tracking-wide">College</span>
-            <span className="text-sm text-gray-500 truncate">Select campus</span>
-          </div>
-
-          <div className="h-8 w-[1px] bg-gray-200 shrink-0"></div>
-
-          {/* Type & Search */}
-          <div className="flex flex-1 items-center justify-between pl-6 pr-2 py-2 hover:bg-gray-100 rounded-full group h-full min-w-0">
-            <div className="flex flex-col min-w-0 pr-2">
-              <span className="text-xs font-bold uppercase tracking-wide">Type</span>
-              <span className="text-sm text-gray-500 truncate">PG/Flat</span>
-            </div>
-
-            {/* Search Button */}
-            <div className="bg-cyan-600 p-3.5 rounded-full text-white hover:bg-cyan-700 transition-colors shrink-0">
-              <Search size={16} strokeWidth={3} />
-            </div>
-          </div>
-
-        </div>
-      </div>
     </header>
   );
 };
