@@ -26,7 +26,7 @@ const Header = () => {
         {/* Logo */}
         <div className="flex-1 flex items-center">
           <Link href={'/'} className='cursor-pointer'>
-            <Image src={'/uniroost.png'} alt={'uniroost_logo'} width={200} height={100} className='cursor-pointer' />
+            <Image src={'/uniroost.png'} alt={'uniroost_logo'} width={150} height={100} className='cursor-pointer w-auto h-auto' priority />
           </Link>
         </div>
 

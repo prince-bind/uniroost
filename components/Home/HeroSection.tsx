@@ -4,10 +4,10 @@ import Image from 'next/image'
 
 const HeroSection = () => {
     return (
-        <section className="pt-32 pb-12 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-50/60 via-white to-white overflow-hidden relative flex items-center">
+        <section className="pt-44 pb-12 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-50/60 via-white to-white overflow-hidden relative flex items-center">
             {/* Decorative background shapes */}
-            <div className="absolute top-32 left-[-100px] w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
-            <div className="absolute top-10 right-[-50px] w-72 h-72 bg-cyan-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+            <div className="absolute top-32 left-[-100px] w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob transform-gpu will-change-[transform,filter]"></div>
+            <div className="absolute top-10 right-[-50px] w-72 h-72 bg-cyan-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 transform-gpu will-change-[transform,filter]"></div>
 
             <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full relative z-10">
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8">
@@ -64,9 +64,9 @@ const HeroSection = () => {
                         {/* Trust Stats */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-100 w-full max-w-sm mt-4">
                             <div className="flex -space-x-3">
-                                <img src="https://i.pravatar.cc/100?img=1" alt="User" className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
-                                <img src="https://i.pravatar.cc/100?img=2" alt="User" className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
-                                <img src="https://i.pravatar.cc/100?img=3" alt="User" className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
+                                <Image src="https://i.pravatar.cc/100?img=1" alt="User" width={40} height={40} className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
+                                <Image src="https://i.pravatar.cc/100?img=2" alt="User" width={40} height={40} className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
+                                <Image src="https://i.pravatar.cc/100?img=3" alt="User" width={40} height={40} className="w-10 h-10 rounded-full border-4 border-white shadow-sm" />
                                 <div className="w-10 h-10 rounded-full border-4 border-white bg-gray-50 flex items-center justify-center text-[10px] font-black text-gray-700 shadow-sm z-10">
                                     +5k
                                 </div>
@@ -87,7 +87,7 @@ const HeroSection = () => {
                     {/* Right Image Column */}
                     <div className="lg:flex-[1.1] w-full relative group mt-8 lg:mt-0">
                         {/* Glow backdrop behind image */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 to-blue-500 rounded-[2rem] blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-700"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 to-blue-500 rounded-[2rem] blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-700 transform-gpu will-change-[opacity]"></div>
 
                         {/* Main Image Container */}
                         <div className="relative h-[300px] lg:h-[460px] w-full rounded-[2rem] overflow-hidden shadow-xl ring-1 ring-gray-900/5 transition-transform duration-700 group-hover:-translate-y-2">
@@ -100,7 +100,7 @@ const HeroSection = () => {
                             />
 
                             {/* Floating element 1: Location Tag */}
-                            <div className="absolute top-6 right-[-15px] sm:right-[-5px] md:right-6 bg-white/95 backdrop-blur-md pl-3 pr-5 py-3 rounded-xl shadow-lg shadow-cyan-900/10 border border-white/60 flex items-center space-x-2.5 animate-bounce" style={{ animationDuration: '4s' }}>
+                            <div className="absolute top-6 right-[-15px] sm:right-[-5px] md:right-6 bg-white/95 backdrop-blur-md pl-3 pr-5 py-3 rounded-xl shadow-lg shadow-cyan-900/10 border border-white/60 flex items-center space-x-2.5 animate-bounce transform-gpu will-change-transform" style={{ animationDuration: '4s' }}>
                                 <div className="p-2 bg-green-100 text-green-600 rounded-full shadow-inner">
                                     <MapPin size={18} />
                                 </div>
@@ -111,7 +111,7 @@ const HeroSection = () => {
                             </div>
 
                             {/* Floating element 2: Trust Tag */}
-                            <div className="absolute bottom-6 left-[-15px] sm:left-[-25px] bg-white/95 backdrop-blur-md pl-3 pr-5 py-2.5 rounded-xl shadow-lg shadow-blue-900/10 border border-white/60 flex items-center space-x-3 transition-transform duration-700 group-hover:-translate-y-3">
+                            <div className="absolute bottom-6 left-[-15px] sm:left-[-25px] bg-white/95 backdrop-blur-md pl-3 pr-5 py-2.5 rounded-xl shadow-lg shadow-blue-900/10 border border-white/60 flex items-center space-x-3 transition-transform duration-700 group-hover:-translate-y-3 transform-gpu will-change-transform">
                                 <div className="w-12 h-12 relative bg-cyan-50 rounded-full flex items-center justify-center border border-cyan-100">
                                     <ShieldCheck size={24} className="text-cyan-600" />
                                 </div>

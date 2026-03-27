@@ -29,8 +29,12 @@ const HowItWorks = () => {
     ];
 
     return (
-        <section className="py-24 bg-white relative">
-            <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <section className="py-24 bg-white relative overflow-hidden">
+            {/* Decorative background blurs */}
+            <div className="absolute top-20 right-[-100px] w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-50/80 to-transparent rounded-full pointer-events-none"></div>
+            <div className="absolute bottom-10 left-[-100px] w-[400px] h-[400px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50/80 to-transparent rounded-full pointer-events-none"></div>
+
+            <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
                 <div className="text-center max-w-2xl mx-auto mb-16">
                     <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
                         How it works

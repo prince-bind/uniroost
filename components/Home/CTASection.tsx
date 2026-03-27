@@ -8,8 +8,8 @@ const CTASection = () => {
                 <div className="relative rounded-[2.5rem] bg-gray-900 overflow-hidden py-16 md:py-24 px-8 md:px-16 text-center shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-gray-900/5">
                     
                     {/* Background Visuals */}
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-600/30 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
-                    <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
+                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-600/30 to-transparent rounded-full pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
+                    <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/20 to-transparent rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
                     
                     {/* Subtle grid pattern overlay fallback (if SVG doesn't exist it just sits empty invisibly) */}
                     <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none mix-blend-overlay"></div>

@@ -11,7 +11,7 @@ const Footer = () => {
                     {/* Brand Column */}
                     <div className="flex flex-col space-y-4 lg:pr-8">
                         <Link href="/" className="inline-block py-1">
-                            <Image src="/uniroost.png" alt="Uniroost Logo" width={160} height={48} className="cursor-pointer" />
+                            <Image src="/uniroost.png" alt="Uniroost Logo" width={160} height={48} className="cursor-pointer rounded-lg w-auto h-auto" />
                         </Link>
                         <p className="text-gray-600 text-[15px] leading-relaxed mt-4">
                             Your campus home, simplified. We connect students with premium, verified accommodations near top universities with zero brokerage fees.
