@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  OWNER
+  ADMIN
+}
+
+enum IdProofType {
+  AADHAAR
+  PAN
+  VOTER_ID
+}
+
+model User {
+  id           String @id @default(cuid())
+  name         String
+  email        String @unique
+  phone        String
+  passwordHash String
+  profileImage String?
+  role         Role   @default(STUDENT)
+
+  idProofUrl  String?
+  idProofNo   String?
+  idProofType IdProofType?
+  isVerified  Boolean      @default(false)
+  remark      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties Property[]
+
+  @@index([role, isVerified])
+  @@map("users")
+}
+
+enum PropertyType {
+  PG
+  FLAT
+}
+
+enum GenderType {
+  BOYS
+  GIRLS
+  UNISEX
+}
+
+enum OccupancyType {
+  SINGLE
+  DOUBLE
+  TRIPLE
+}
+
+enum RentType {
+  PER_BED
+  PER_ROOM
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  rent        Int
+  rentType    RentType
+
+  address String
+  city    String
+  state   String
+  zipcode String
+
+  latitude  Float?
+  longitude Float?
+
+  type        PropertyType
+  gender      GenderType
+  occupancy   OccupancyType
+  isFurnished Boolean       @default(false)
+  isAvailable Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  colleges PropertyCollege[]
+
+  amenities PropertyAmenity[]
+  images    PropertyImage[]
+
+  // Search filters run on these columns directly, so they need indexes
+  // or `findMany` degrades to a sequential scan as the table grows.
+  @@index([city, isAvailable])
+  @@index([type])
+  @@index([gender])
+  @@index([rent])
+  @@index([ownerId])
+  @@index([createdAt])
+  @@map("properties")
+}
+
+model College {
+  id          String   @id @default(cuid())
+  name        String
+  shortName   String?
+  city        String
+  state       String
+  zipcode     String?
+  websiteUrl  String?
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime @default(now())
+
+  properties PropertyCollege[]
+
+  @@unique([name, city])
+  @@map("colleges")
+}
+
+model PropertyCollege {
+  propertyId String
+  collegeId  String
+
+  distanceKm Float?
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  college  College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, collegeId])
+  @@map("property_colleges")
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  url        String
+  propertyId String
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model Amenity {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  properties PropertyAmenity[]
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  propertyId String
+  amenityId  String
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity  Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, amenityId])
+  @@map("property_amenities")
+}
