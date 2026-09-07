@@ -93,7 +93,7 @@ const HeroSection = () => {
                         <div className="relative h-[300px] lg:h-[460px] w-full rounded-[2rem] overflow-hidden shadow-xl ring-1 ring-gray-900/5 transition-transform duration-700 group-hover:-translate-y-2 transform-gpu will-change-transform">
                             <Image
                                 src="/hero-image.png"
-                                alt="Students enjoying their premium Uniroost accommodation"
+                                alt="Students premium Uniroost accommodation"
                                 fill
                                 sizes="(max-width: 1024px) 100vw, 50vw"
                                 className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
