@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
-import { MapPin, IndianRupee, BedDouble, Home, Sparkles, Filter, ShieldCheck, Search, Navigation } from "lucide-react";
+import { GenderType, Prisma, PropertyType } from "@/generated/prisma/client";
+import { MapPin, IndianRupee, BedDouble, Home, Sparkles, ShieldCheck, Navigation } from "lucide-react";
+import SearchFilters from "@/components/SearchFilters";
 import Image from "next/image";
 import Link from "next/link";
 
 interface SearchParams {
-  city?: string;
+  college?: string;
   type?: string;
   gender?: string;
   maxRent?: string;
@@ -20,18 +22,28 @@ export default async function SearchPage({
 }) {
   const params = await searchParams;
 
-  const where: any = { isAvailable: true };
-  if (params.city) where.city = { contains: params.city, mode: "insensitive" };
-  if (params.type && params.type !== "ALL") where.type = params.type;
-  if (params.gender && params.gender !== "ALL") where.gender = params.gender;
-  if (params.maxRent) where.rent = { lte: parseInt(params.maxRent) };
+  const where: Prisma.PropertyWhereInput = { isAvailable: true };
+  if (params.college && params.college !== "ALL") {
+    where.colleges = { some: { collegeId: params.college } };
+  }
+  if (params.type === "PG" || params.type === "FLAT") {
+    where.type = params.type as PropertyType;
+  }
+  if (params.gender === "BOYS" || params.gender === "GIRLS" || params.gender === "UNISEX") {
+    where.gender = params.gender as GenderType;
+  }
+  const maxRent = Number.parseInt(params.maxRent ?? "", 10);
+  if (Number.isFinite(maxRent) && maxRent > 0) where.rent = { lte: maxRent };
 
   // Clamp to a sane range so ?page=-5 or ?page=99999999 can't be used to
   // force a huge OFFSET scan or a negative skip that Prisma would reject.
   const requestedPage = parseInt(params.page ?? "1", 10);
   const currentPage = Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
 
-  const [properties, totalCount] = await prisma.$transaction([
+  // These are independent read queries. Do not wrap them in Prisma's batch
+  // transaction: it pins all of the listing's relation queries to one pg
+  // client, which triggers pg's "client.query() already executing" warning.
+  const [properties, totalCount, colleges] = await Promise.all([
     prisma.property.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -45,6 +57,11 @@ export default async function SearchPage({
       },
     }),
     prisma.property.count({ where }),
+    prisma.college.findMany({
+      where: { properties: { some: { property: { isAvailable: true } } } },
+      select: { id: true, name: true, city: true },
+      orderBy: [{ name: "asc" }, { city: "asc" }],
+    }),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
@@ -73,78 +90,7 @@ export default async function SearchPage({
           </p>
         </div>
 
-        {/* Search / Filter Bar */}
-        <form method="GET" className="flex justify-center mb-16">
-          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-[2.5rem] md:rounded-full shadow-2xl shadow-gray-200/50 hover:shadow-cyan-900/10 hover:border-cyan-200 transition-all w-full max-w-[1000px] min-h-[70px] p-2 md:p-0 ring-1 ring-gray-900/5">
-
-            {/* City */}
-            <div className="flex flex-col flex-1 pl-8 pr-4 py-3 md:py-2 rounded-full h-full justify-center min-w-0 w-full md:w-auto">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">City</span>
-              <input
-                type="text"
-                name="city"
-                defaultValue={params.city ?? ""}
-                placeholder="Delhi, Mumbai…"
-                className="bg-transparent text-sm font-bold outline-none placeholder-gray-400 text-gray-900 w-full border-none focus:ring-0 p-0"
-              />
-            </div>
-
-            <div className="hidden md:block h-10 w-[1px] bg-gray-100 shrink-0" />
-
-            {/* Type */}
-            <div className="flex flex-col flex-1 px-8 py-3 md:py-2 rounded-full h-full justify-center min-w-0 w-full md:w-auto">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Type</span>
-              <select
-                name="type"
-                defaultValue={params.type ?? "ALL"}
-                className="bg-transparent text-sm font-bold outline-none text-gray-900 border-none focus:ring-0 p-0 cursor-pointer"
-              >
-                <option value="ALL">All Types</option>
-                <option value="PG">PG</option>
-                <option value="FLAT">Flat / Apartment</option>
-              </select>
-            </div>
-
-            <div className="hidden md:block h-10 w-[1px] bg-gray-100 shrink-0" />
-
-            {/* Gender */}
-            <div className="flex flex-col flex-1 px-8 py-3 md:py-2 rounded-full h-full justify-center min-w-0 w-full md:w-auto">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Gender</span>
-              <select
-                name="gender"
-                defaultValue={params.gender ?? "ALL"}
-                className="bg-transparent text-sm font-bold outline-none text-gray-900 border-none focus:ring-0 p-0 cursor-pointer"
-              >
-                <option value="ALL">Any</option>
-                <option value="BOYS">Boys</option>
-                <option value="GIRLS">Girls</option>
-                <option value="UNISEX">Unisex</option>
-              </select>
-            </div>
-
-            <div className="hidden md:block h-10 w-[1px] bg-gray-100 shrink-0" />
-
-            {/* Max Rent + Search */}
-            <div className="flex flex-1 items-center justify-between pl-8 pr-3 py-3 md:py-2 rounded-full h-full min-w-0 w-full md:w-auto gap-3">
-              <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Max Rent (₹)</span>
-                <input
-                  type="number"
-                  name="maxRent"
-                  defaultValue={params.maxRent ?? ""}
-                  placeholder="e.g. 10000"
-                  className="bg-transparent text-sm font-bold outline-none placeholder-gray-400 text-gray-900 w-full border-none focus:ring-0 p-0"
-                />
-              </div>
-              <button
-                type="submit"
-                className="h-14 w-14 md:h-12 md:w-12 bg-gray-900 rounded-full text-white hover:bg-cyan-600 shadow-lg shadow-gray-900/20 active:scale-95 transition-all flex items-center justify-center shrink-0"
-              >
-                <Search size={20} strokeWidth={2.5} />
-              </button>
-            </div>
-          </div>
-        </form>
+        <SearchFilters colleges={colleges} filters={params} />
 
         {/* Results Info Row */}
         <div className="flex items-center justify-between border-b border-gray-100 pb-8 mb-12">
@@ -153,11 +99,11 @@ export default async function SearchPage({
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Available Homes</span>
               <span className="text-sm font-bold text-gray-900">
                 {properties.length} {properties.length === 1 ? "listing" : "listings"} found
-                {params.city && ` in "${params.city}"`}
+                {params.college && params.college !== "ALL" && " near your selected college"}
               </span>
             </div>
           </div>
-          {(params.city || params.type || params.gender || params.maxRent) && (
+          {(params.college || params.type || params.gender || params.maxRent) && (
             <Link
               href="/search"
               className="text-xs font-black text-gray-400 hover:text-rose-500 uppercase tracking-widest transition-colors"

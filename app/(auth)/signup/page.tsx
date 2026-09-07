@@ -6,6 +6,23 @@ import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { Mail, Lock, User, ArrowRight, GraduationCap, Building2, Phone } from 'lucide-react'
 
+type SignupErrorResponse = {
+  error?: string;
+  details?: {
+    fieldErrors?: Record<string, string[] | undefined>;
+    formErrors?: string[];
+  };
+};
+
+function getSignupErrorMessage(data: SignupErrorResponse) {
+  const fieldErrors = data.details?.fieldErrors
+    ? Object.values(data.details.fieldErrors).flatMap((messages) => messages ?? [])
+    : [];
+  const formErrors = data.details?.formErrors ?? [];
+
+  return [...fieldErrors, ...formErrors][0] ?? data.error ?? 'Something went wrong during registration';
+}
+
 const SignupPage = () => {
   const router = useRouter();
   const [role, setRole] = useState<'student' | 'owner'>('student');
@@ -44,10 +61,10 @@ const SignupPage = () => {
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json() as SignupErrorResponse;
 
       if (!res.ok) {
-        throw new Error(data.error || 'Something went wrong during registration');
+        throw new Error(getSignupErrorMessage(data));
       }
 
       // Automatically sign in the user
@@ -205,7 +222,10 @@ const SignupPage = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                placeholder="+1 (555) 000-0000" 
+                inputMode="numeric"
+                pattern="[6-9][0-9]{9}"
+                title="Enter a 10-digit Indian mobile number starting with 6, 7, 8, or 9"
+                placeholder="9876543210" 
                 className="block w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-600/20 focus:border-cyan-600 transition-all text-sm font-medium"
               />
             </div>
@@ -223,11 +243,12 @@ const SignupPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                minLength={8}
                 placeholder="Create a strong password" 
                 className="block w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-600/20 focus:border-cyan-600 transition-all text-sm font-medium"
               />
             </div>
-            <p className="text-[11px] text-gray-500 ml-2 font-medium leading-none m-0 pt-0.5">Must be at least 8 characters</p>
+            <p className="text-[11px] text-gray-500 ml-2 font-medium leading-none m-0 pt-0.5">Use 8+ characters with uppercase, lowercase, and a number</p>
           </div>
 
           <div className="flex items-start pl-1 mt-1.5">
